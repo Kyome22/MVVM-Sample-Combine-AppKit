@@ -21,11 +21,19 @@ jobs:
       - name: Make Output Directory
         run: mkdir -p ${{ env.OUTPUT_DIR }}
 
+      - name: Import Signing Certificate
+        run: |
+          sudo security import .github/DeveloperIDApplication.p12 \
+          -k /Library/Keychains/System.keychain \
+          -P ${{ secrets.SIGNING_CERTIFICATE }} \
+          -T /usr/bin/codesign
+
       - name: Build For Test
         run: |
           xcodebuild clean build-for-testing \
           -project MVVM-Sample-Combine-AppKit.xcodeproj \
           -scheme MVVM-Sample-Combine-AppKit \
+          -configuration Release \
           -destination "platform=macOS" \
           -derivedDataPath ${{ env.DERIVED_DATA }}
 
