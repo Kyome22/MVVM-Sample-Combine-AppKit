@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode13.1.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_13.1.app/Contents/Developer
   OUTPUT_DIR: "${{ github.workspace }}/output"
   DERIVED_DATA: DerivedData
 
