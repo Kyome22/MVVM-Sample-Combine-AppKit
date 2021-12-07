@@ -1,0 +1,66 @@
+name: Dispatch Workflow
+
+on:
+  workflow_dispatch:
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode13.1.app/Contents/Developer
+  OUTPUT_DIR: "${{ github.workspace }}/output"
+  DERIVED_DATA: DerivedData
+
+jobs:
+  run-test:
+    name: Run Test
+    runs-on: macos-11
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Make Output Directory
+        run: mkdir -p ${{ env.OUTPUT_DIR }}
+
+      - name: Build For Test
+        run: |
+          xcodebuild clean build-for-testing \
+          -project MVVM-Sample-Combine-AppKit.xcodeproj \
+          -scheme MVVM-Sample-Combine-AppKit \
+          -destination "platform=macOS" \
+          -derivedDataPath ${{ env.DERIVED_DATA }}
+
+      - name: UnitTest Without Building
+        run: |
+          xcodebuild test-without-building \
+          -project MVVM-Sample-Combine-AppKit.xcodeproj \
+          -scheme MVVM-Sample-Combine-AppKit \
+          -destination "platform=macOS" \
+          -derivedDataPath ${{ env.DERIVED_DATA }} \
+          -resultBundlePath ${{ env.OUTPUT_DIR }}/result_bundle_unit.xcresult \
+          -only-testing:MVVM-Sample-Combine-AppKitTests
+
+      - name: UITest Without Building
+        run: |
+          test-without-building \
+          -project MVVM-Sample-Combine-AppKit.xcodeproj \
+          -scheme MVVM-Sample-Combine-AppKit \
+          -destination "platform=macOS" \
+          -derivedDataPath ${{ env.DERIVED_DATA }} \
+          -resultBundlePath ${{ env.OUTPUT_DIR }}/result_bundle_ui.xcresult \
+          -only-testing:MVVM-Sample-Combine-AppKitUITests
+
+      - name: Get Test Result JSON
+        run: |
+          xcrun xcresulttool get \
+          --path ${{ env.OUTPUT_DIR }}/result_bundle_unit.xcresult \
+          --format json > ${{ env.OUTPUT_DIR }}/result_unit_test.json
+          xcrun xcresulttool get \
+          --path ${{ env.OUTPUT_DIR }}/result_bundle_ui.xcresult \
+          --format json > ${{ env.OUTPUT_DIR }}/result_ui_test.json
+
+      - name: Store Test Result Directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Results
+          path: ${{ env.OUTPUT_DIR }}
+          retention-days: 7
