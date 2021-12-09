@@ -35,7 +35,10 @@ jobs:
           -scheme MVVM-Sample-Combine-AppKit \
           -configuration Release \
           -destination "platform=macOS" \
-          -derivedDataPath ${{ env.DERIVED_DATA }}
+          -derivedDataPath ${{ env.DERIVED_DATA }} \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
 
       - name: UnitTest Without Building
         run: |
