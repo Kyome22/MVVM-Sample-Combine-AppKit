@@ -26,7 +26,7 @@ jobs:
           xcodebuild clean build-for-testing \
           -project MVVM-Sample-Combine-AppKit.xcodeproj \
           -scheme MVVM-Sample-Combine-AppKit \
-          -configuration Release \
+          -configuration Debug \
           -destination "platform=macOS" \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           CODE_SIGN_IDENTITY="" \
@@ -45,7 +45,7 @@ jobs:
 
       - name: UITest Without Building
         run: |
-          test-without-building \
+          xcodebuild test-without-building \
           -project MVVM-Sample-Combine-AppKit.xcodeproj \
           -scheme MVVM-Sample-Combine-AppKit \
           -destination "platform=macOS" \
