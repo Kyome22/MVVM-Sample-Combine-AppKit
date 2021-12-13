@@ -8,7 +8,6 @@
 import XCTest
 
 class MVVMSampleUITests: XCTestCase {
-
     override func setUp() {
         continueAfterFailure = false
         let app = XCUIApplication()
@@ -16,53 +15,15 @@ class MVVMSampleUITests: XCTestCase {
     }
 
     override func tearDown() {}
-
-    func testInputIdAndPassword() {
-        let window = XCUIApplication().windows["main-window"]
-        
-        let idTextField = window.textFields["text-field-id"]
-        idTextField.tap()
-        idTextField.typeText("id")
-
-        let passwordTextField = window.textFields["text-field-password"]
-        passwordTextField.tap()
-        passwordTextField.typeText("password")
-        
-        let validationLabel = window.staticTexts["label-validation"]
-        let expect = "OK!!!"
-        let predicate = NSPredicate(format: "value == %@", expect)
-        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
-        let result = XCTWaiter().wait(for: [expectation], timeout: 3)
-        XCTAssertEqual(result, .completed)
-    }
     
-    func testInputId() {
+    func testBeforeInput() {
         let window = XCUIApplication().windows["main-window"]
         
-        let idTextField = window.textFields["text-field-id"]
-        idTextField.tap()
-        idTextField.typeText("id")
-
         let validationLabel = window.staticTexts["label-validation"]
-        let expect = "Passwordが未入力です。"
+        let expect = "IDとPasswordを入力してください。"
         let predicate = NSPredicate(format: "value == %@", expect)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
-        let result = XCTWaiter().wait(for: [expectation], timeout: 3)
-        XCTAssertEqual(result, .completed)
-    }
-    
-    func testInputPassword() {
-        let window = XCUIApplication().windows["main-window"]
-
-        let passwordTextField = window.textFields["text-field-password"]
-        passwordTextField.tap()
-        passwordTextField.typeText("password")
-        
-        let validationLabel = window.staticTexts["label-validation"]
-        let expect = "IDが未入力です。"
-        let predicate = NSPredicate(format: "value == %@", expect)
-        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
-        let result = XCTWaiter().wait(for: [expectation], timeout: 3)
+        let result = XCTWaiter().wait(for: [expectation], timeout: 5)
         XCTAssertEqual(result, .completed)
     }
     
@@ -79,7 +40,56 @@ class MVVMSampleUITests: XCTestCase {
         let expect = "IDとPasswordが未入力です。"
         let predicate = NSPredicate(format: "value == %@", expect)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
-        let result = XCTWaiter().wait(for: [expectation], timeout: 3)
+        let result = XCTWaiter().wait(for: [expectation], timeout: 5)
+        XCTAssertEqual(result, .completed)
+    }
+    
+    func testInputId() {
+        let window = XCUIApplication().windows["main-window"]
+        
+        let idTextField = window.textFields["text-field-id"]
+        idTextField.tap()
+        idTextField.typeText("id")
+
+        let validationLabel = window.staticTexts["label-validation"]
+        let expect = "Passwordが未入力です。"
+        let predicate = NSPredicate(format: "value == %@", expect)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
+        let result = XCTWaiter().wait(for: [expectation], timeout: 5)
+        XCTAssertEqual(result, .completed)
+    }
+    
+    func testInputPassword() {
+        let window = XCUIApplication().windows["main-window"]
+
+        let passwordTextField = window.textFields["text-field-password"]
+        passwordTextField.tap()
+        passwordTextField.typeText("password")
+        
+        let validationLabel = window.staticTexts["label-validation"]
+        let expect = "IDが未入力です。"
+        let predicate = NSPredicate(format: "value == %@", expect)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
+        let result = XCTWaiter().wait(for: [expectation], timeout: 5)
+        XCTAssertEqual(result, .completed)
+    }
+    
+    func testInputIdAndPassword() {
+        let window = XCUIApplication().windows["main-window"]
+        
+        let idTextField = window.textFields["text-field-id"]
+        idTextField.tap()
+        idTextField.typeText("id")
+
+        let passwordTextField = window.textFields["text-field-password"]
+        passwordTextField.tap()
+        passwordTextField.typeText("password")
+        
+        let validationLabel = window.staticTexts["label-validation"]
+        let expect = "OK!!!"
+        let predicate = NSPredicate(format: "value == %@", expect)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: validationLabel)
+        let result = XCTWaiter().wait(for: [expectation], timeout: 5)
         XCTAssertEqual(result, .completed)
     }
 }

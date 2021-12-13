@@ -41,7 +41,7 @@ jobs:
           -destination "platform=macOS" \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           -resultBundlePath ${{ env.OUTPUT_DIR }}/result_bundle_unit.xcresult \
-          -only-testing:MVVM-Sample-Combine-AppKitTests
+          -only-testing:MVVM-Sample-Combine-AppKitTests || true
 
       - name: UITest Without Building
         run: |
@@ -51,7 +51,7 @@ jobs:
           -destination "platform=macOS" \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           -resultBundlePath ${{ env.OUTPUT_DIR }}/result_bundle_ui.xcresult \
-          -only-testing:MVVM-Sample-Combine-AppKitUITests
+          -only-testing:MVVM-Sample-Combine-AppKitUITests || true
 
       - name: Get Test Result JSON
         run: |
