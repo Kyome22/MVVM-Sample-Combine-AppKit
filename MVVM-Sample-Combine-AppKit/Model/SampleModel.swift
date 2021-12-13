@@ -7,26 +7,32 @@
 
 import Combine
 
+typealias SampleModelResult = Result<Void, SampleModelError>
+
 protocol SampleModelProtocol {
-    func validate(idText: String, passwordText: String) -> AnyPublisher<Void, SampleModelError>
+    var validatePublisher: AnyPublisher<SampleModelResult, Never> { get }
+    func validate(idText: String, passwordText: String)
 }
 
 final class SampleModel: SampleModelProtocol {
-    func validate(idText: String, passwordText: String) -> AnyPublisher<Void, SampleModelError> {
+    private let validateSubject = PassthroughSubject<SampleModelResult, Never>()
+    
+    var validatePublisher: AnyPublisher<SampleModelResult, Never> {
+        return validateSubject.eraseToAnyPublisher()
+    }
+    
+    func validate(idText: String, passwordText: String) {
+        let result: SampleModelResult
         switch (idText.isEmpty, passwordText.isEmpty) {
         case (true, true):
-            return Fail(error: SampleModelError.invalidIdAndPassword)
-                .eraseToAnyPublisher()
+            result = SampleModelResult.failure(.invalidIdAndPassword)
         case (true, false):
-            return Fail(error: SampleModelError.invalidId)
-                .eraseToAnyPublisher()
+            result = SampleModelResult.failure(.invalidId)
         case (false, true):
-            return Fail(error: SampleModelError.invalidPassword)
-                .eraseToAnyPublisher()
+            result = SampleModelResult.failure(.invalidPassword)
         case (false, false):
-            return Just(())
-                .setFailureType(to: SampleModelError.self)
-                .eraseToAnyPublisher()
+            result = SampleModelResult.success(())
         }
+        validateSubject.send(result)
     }
 }

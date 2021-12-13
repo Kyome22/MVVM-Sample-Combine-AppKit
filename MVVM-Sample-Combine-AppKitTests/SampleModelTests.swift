@@ -27,14 +27,16 @@ class SampleModelTests: XCTestCase {
         var actualError: SampleModelError?
         let expectation = self.expectation(description: "Validate")
         
-        model.validate(idText: "id", passwordText: "password")
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+        model.validatePublisher
+            .sink(receiveValue: { result in
+                if case .failure(let error) = result {
                     actualError = error
                 }
                 expectation.fulfill()
-            }, receiveValue: { _ in })
+            })
             .store(in: &cancellables)
+        
+        model.validate(idText: "id", passwordText: "password")
         
         self.wait(for: [expectation], timeout: 3)
         XCTAssertNil(actualError)
@@ -45,14 +47,16 @@ class SampleModelTests: XCTestCase {
         var actualError: SampleModelError?
         let expectation = self.expectation(description: "Validate")
         
-        model.validate(idText: "", passwordText: "password")
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+        model.validatePublisher
+            .sink(receiveValue: { result in
+                if case .failure(let error) = result {
                     actualError = error
                 }
                 expectation.fulfill()
-            }, receiveValue: { _ in })
+            })
             .store(in: &cancellables)
+        
+        model.validate(idText: "", passwordText: "password")
         
         self.wait(for: [expectation], timeout: 3)
         XCTAssertEqual(actualError, SampleModelError.invalidId)
@@ -63,14 +67,16 @@ class SampleModelTests: XCTestCase {
         var actualError: SampleModelError?
         let expectation = self.expectation(description: "Validate")
         
-        model.validate(idText: "id", passwordText: "")
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+        model.validatePublisher
+            .sink(receiveValue: { result in
+                if case .failure(let error) = result {
                     actualError = error
                 }
                 expectation.fulfill()
-            }, receiveValue: { _ in })
+            })
             .store(in: &cancellables)
+        
+        model.validate(idText: "id", passwordText: "")
         
         self.wait(for: [expectation], timeout: 3)
         XCTAssertEqual(actualError, SampleModelError.invalidPassword)
@@ -81,14 +87,16 @@ class SampleModelTests: XCTestCase {
         var actualError: SampleModelError?
         let expectation = self.expectation(description: "Validate")
         
-        model.validate(idText: "", passwordText: "")
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+        model.validatePublisher
+            .sink(receiveValue: { result in
+                if case .failure(let error) = result {
                     actualError = error
                 }
                 expectation.fulfill()
-            }, receiveValue: { _ in })
+            })
             .store(in: &cancellables)
+        
+        model.validate(idText: "", passwordText: "")
         
         self.wait(for: [expectation], timeout: 3)
         XCTAssertEqual(actualError, SampleModelError.invalidIdAndPassword)

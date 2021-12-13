@@ -26,25 +26,22 @@ final class SampleViewModel {
     
     init(model: SampleModelProtocol = SampleModel()) {
         self.model = model
-    }
-    
-    deinit {
-        cancellables.removeAll()
-    }
-    
-    func idPasswordChanged(id: String, password: String) {
-        model.validate(idText: id, passwordText: password)
-            .sink(receiveCompletion: { [weak self] completion in
+        model.validatePublisher
+            .sink(receiveValue: { [weak self] result in
                 guard let self = self else { return }
-                switch completion {
-                case .finished:
+                switch result {
+                case .success():
                     self.validationTextSubject.send("OK!!!")
                     self.loadLabelColorSubject.send(NSColor.green)
                 case .failure(let error):
                     self.validationTextSubject.send(error.errorText)
                     self.loadLabelColorSubject.send(NSColor.red)
                 }
-            }, receiveValue: { _ in })
+            })
             .store(in: &cancellables)
+    }
+    
+    func idPasswordChanged(id: String, password: String) {
+        model.validate(idText: id, passwordText: password)
     }
 }

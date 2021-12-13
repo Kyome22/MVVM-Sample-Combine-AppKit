@@ -26,14 +26,14 @@ class SampleViewController: NSViewController {
         passwordTextField.delegate = self
         
         viewModel.validationText
-            .sink(receiveValue: { text in
-                self.validationLabel.stringValue = text
+            .sink(receiveValue: { [weak self] text in
+                self?.validationLabel.stringValue = text
             })
             .store(in: &cancellables)
         
         viewModel.loadLabelColor
-            .sink(receiveValue: { color in
-                self.validationLabel.textColor = color
+            .sink(receiveValue: { [weak self] color in
+                self?.validationLabel.textColor = color
             })
             .store(in: &cancellables)
         
@@ -44,16 +44,11 @@ class SampleViewController: NSViewController {
         super.viewDidAppear()
         self.view.window?.makeFirstResponder(idTextField)
     }
-
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-        cancellables.removeAll()
-    }
 }
 
 extension SampleViewController: NSTextFieldDelegate {
     func controlTextDidChange(_ obj: Notification) {
-        self.viewModel.idPasswordChanged(id: idTextField.stringValue,
-                                         password: passwordTextField.stringValue)
+        viewModel.idPasswordChanged(id: idTextField.stringValue,
+                                    password: passwordTextField.stringValue)
     }
 }
