@@ -8,16 +8,18 @@
 import XCTest
 
 class MVVMSampleUITests: XCTestCase {
+    private var app: XCUIApplication!
+
     override func setUp() {
         continueAfterFailure = false
-        let app = XCUIApplication()
+        app = XCUIApplication()
         app.launch()
     }
 
     override func tearDown() {}
     
     func testBeforeInput() {
-        let window = XCUIApplication().windows["main-window"]
+        let window = app.windows["main-window"]
         
         let validationLabel = window.staticTexts["label-validation"]
         let expect = "IDとPasswordを入力してください。"
@@ -28,7 +30,7 @@ class MVVMSampleUITests: XCTestCase {
     }
     
     func testInputAndClear() {
-        let window = XCUIApplication().windows["main-window"]
+        let window = app.windows["main-window"]
 
         let idTextField = window.textFields["text-field-id"]
         idTextField.tap()
@@ -45,7 +47,7 @@ class MVVMSampleUITests: XCTestCase {
     }
     
     func testInputId() {
-        let window = XCUIApplication().windows["main-window"]
+        let window = app.windows["main-window"]
         
         let idTextField = window.textFields["text-field-id"]
         idTextField.tap()
@@ -60,7 +62,7 @@ class MVVMSampleUITests: XCTestCase {
     }
     
     func testInputPassword() {
-        let window = XCUIApplication().windows["main-window"]
+        let window = app.windows["main-window"]
 
         let passwordTextField = window.textFields["text-field-password"]
         passwordTextField.tap()
@@ -75,7 +77,7 @@ class MVVMSampleUITests: XCTestCase {
     }
     
     func testInputIdAndPassword() {
-        let window = XCUIApplication().windows["main-window"]
+        let window = app.windows["main-window"]
         
         let idTextField = window.textFields["text-field-id"]
         idTextField.tap()

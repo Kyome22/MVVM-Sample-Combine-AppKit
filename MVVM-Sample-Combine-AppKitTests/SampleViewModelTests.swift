@@ -14,12 +14,10 @@ class SampleViewModelTests: XCTestCase {
     private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
-        super.setUp()
         cancellables = []
     }
 
     override func tearDown() {
-        super.tearDown()
         cancellables.removeAll()
     }
     
